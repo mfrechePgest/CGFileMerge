@@ -243,7 +243,7 @@ public class WatchDir {
 
 	public static void main(String[] args) throws IOException {
 		// parse arguments
-		if (args.length < 2)
+		if ((args.length < 2) || (args.length > 3))
 			usage();
 		int dirArg = 0;
 		int targetArg = 1;
@@ -253,8 +253,10 @@ public class WatchDir {
 		WatchDir d = new WatchDir(dir, new File(args[targetArg]));
 		d.gatherFiles();
 		d.createOutput();
-		if (args[2].equals("once")) {
+		if (args.length <= 3) {
+		  if (args[2].equals("once")) {
 			return;
+		  }
 		}
 		d.processEvents();
 	}
