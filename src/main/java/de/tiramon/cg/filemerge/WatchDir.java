@@ -243,7 +243,7 @@ public class WatchDir {
 
 	public static void main(String[] args) throws IOException {
 		// parse arguments
-		if (args.length != 2)
+		if (args.length < 2)
 			usage();
 		int dirArg = 0;
 		int targetArg = 1;
