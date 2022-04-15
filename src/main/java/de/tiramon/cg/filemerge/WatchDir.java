@@ -250,7 +250,7 @@ public class WatchDir {
 		int dirArg = 0;
 		int targetArg = 1;
 		// register directory and process its events
-		List<Path> dir = Stream.of(args[dirArg].split("|")).map(Paths::get).collect(Collectors.toList());
+		List<Path> dir = Stream.of(args[dirArg].split("\\|")).map(Paths::get).collect(Collectors.toList());
 
 		WatchDir d = new WatchDir(dir, new File(args[targetArg]));
 		d.gatherFiles();
