@@ -59,6 +59,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import de.tiramon.cg.filemerge.java.JavaProject;
 
@@ -115,17 +117,17 @@ public class WatchDir {
 
 	/**
 	 * Creates a WatchService and registers the given directory
-	 *
-	 * @param project
 	 */
-	WatchDir(Path dir, File file) throws IOException {
+	WatchDir(List<Path> dir, File file) throws IOException {
 		watcher = FileSystems.getDefault().newWatchService();
 		keys = new HashMap<>();
 		outputFile = file;
 		recursive = true;
 
 		System.out.format("Scanning %s ...\n", dir);
-		registerAll(dir);
+		for (Path path : dir) {
+			registerAll(path);
+		}
 		System.out.println("Done.");
 
 		// enable trace after initial registration
@@ -248,7 +250,7 @@ public class WatchDir {
 		int dirArg = 0;
 		int targetArg = 1;
 		// register directory and process its events
-		Path dir = Paths.get(args[dirArg]);
+		List<Path> dir = Stream.of(args[dirArg].split("|")).map(Paths::get).collect(Collectors.toList());
 
 		WatchDir d = new WatchDir(dir, new File(args[targetArg]));
 		d.gatherFiles();
