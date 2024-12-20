@@ -21,11 +21,10 @@ import java.util.Set;
 public class CreateOutput {
 	public static void main(String[] args) throws IOException {
 
-		List<String> folders = Arrays.asList(args);
-		Set<String> importSet = new HashSet<>();
+        Set<String> importSet = new HashSet<>();
 		Set<String> knownPackages = new HashSet<>();
 		StringBuilder builder = new StringBuilder();
-		for (String folder : folders) {
+		for (String folder : args) {
 			handleFolder(folder, importSet, knownPackages, builder, folder);
 		}
 
@@ -45,12 +44,7 @@ public class CreateOutput {
 			System.err.println(pkg);
 		}
 
-		Iterator<String> it = importSet.iterator();
-		while (it.hasNext()) {
-			String imp = it.next();
-			if (knownPackages.contains(imp.substring("import ".length(), imp.lastIndexOf('.'))))
-				it.remove();
-		}
+        importSet.removeIf(imp -> knownPackages.contains(imp.substring("import ".length(), imp.lastIndexOf('.'))));
 	}
 
 	private static void handleFolder(String folder, Set<String> importSet, Set<String> knownPackages, StringBuilder builder, String baseFolder) throws IOException {
@@ -89,11 +83,14 @@ public class CreateOutput {
 					} else if (line.startsWith("public enum")) {
 						line = line.replace("public enum", "enum");
 						System.err.println(line);
+					} else if (line.startsWith("public record")) {
+						line = line.replace("public record", "record");
+						System.err.println(line);
 					} else if (line.startsWith("public abstract")) {
 						line = line.replace("public abstract", "abstract");
 						System.err.println(line);
 					}
-					builder.append(line + "\n");
+					builder.append(line).append("\n");
 				}
 			}
 		}
